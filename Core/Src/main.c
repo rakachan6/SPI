@@ -97,11 +97,7 @@ int main(void)
   MX_DMA_Init();
   MX_SPI2_Init();
   /* USER CODE BEGIN 2 */
-  W25Q128_Erase_Chip();
-  W25Q128_Check_ID();
-  W25Q128_Check_ID();
-  W25Q128_Check_ID();
-  W25Q128_Check_ID();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
