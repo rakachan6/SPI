@@ -36,6 +36,8 @@ add_executable(${CMAKE_PROJECT_NAME}
         App/W25Q128/W25Q128.c
         App/W25Q128/W25Q128.h
         App/W25Q128/W25Q128_Commands.h
+        App/Utils/utils.c
+        App/Utils/utils.h
 )
 
 # Add STM32CubeMX generated sources
