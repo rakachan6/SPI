@@ -70,7 +70,7 @@ W25Q128_Result_t W25Q128_Read(const uint32_t mem_addr, uint8_t* rx_buffer, const
     return W25Q128_OK;
 }
 
-W25Q128_Result_t W25Q128_Write(const uint32_t mem_addr, const uint8_t* tx_buffer, const uint16_t len)
+W25Q128_Result_t W25Q128_Write_Page(const uint32_t mem_addr, const uint8_t* tx_buffer, const uint16_t len)
 {
     if ((mem_addr / W25Q128_PAGE_SIZE) != ((mem_addr + len - 1) / W25Q128_PAGE_SIZE))
         return W25Q128_OUT_OF_RANGE;
@@ -137,6 +137,31 @@ W25Q128_Result_t W25Q128_Write(const uint32_t mem_addr, const uint8_t* tx_buffer
             return W25Q128_ERROR;
     }
 
+    return W25Q128_OK;
+}
+
+W25Q128_Result_t W25Q128_Write(uint32_t mem_addr, const uint8_t* tx_buffer, uint16_t len)
+{
+    if (mem_addr + len > W25Q128_CHIP_SIZE)
+        return W25Q128_OUT_OF_RANGE;
+
+    while (len > 0)
+    {
+        uint16_t bytes_left_in_page = W25Q128_PAGE_SIZE - (mem_addr % W25Q128_PAGE_SIZE);
+        uint16_t current_len = (len < bytes_left_in_page) ? len : bytes_left_in_page;
+
+        W25Q128_Result_t rx_status;
+        rx_status = W25Q128_Write_Page(mem_addr, tx_buffer, current_len);
+
+        if (rx_status == W25Q128_TIMEOUT)
+            return W25Q128_TIMEOUT;
+        if (rx_status == W25Q128_ERROR)
+            return W25Q128_ERROR;
+
+        len -= current_len;
+        tx_buffer += current_len;
+        mem_addr += current_len;
+    }
     return W25Q128_OK;
 }
 

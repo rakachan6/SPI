@@ -24,6 +24,7 @@ typedef enum
 
 W25Q128_Result_t W25Q128_Check_ID(void);
 W25Q128_Result_t W25Q128_Read(uint32_t mem_addr, uint8_t* rx_buffer, uint32_t len);
+W25Q128_Result_t W25Q128_Write_Page(uint32_t mem_addr, const uint8_t* tx_buffer, uint16_t len);
 W25Q128_Result_t W25Q128_Write(uint32_t mem_addr, const uint8_t* tx_buffer, uint16_t len);
 
 W25Q128_Result_t W25Q128_Erase_Sector(uint32_t sector_addr);
