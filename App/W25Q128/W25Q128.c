@@ -14,9 +14,9 @@ W25Q128_Result_t W25Q128_Check_ID(void)
     HAL_StatusTypeDef status;
 
     HAL_Delay (100);
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, reset_command, sizeof(reset_command), 100);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN));
     HAL_Delay (100);
 
     if (status == HAL_ERROR)
@@ -24,9 +24,9 @@ W25Q128_Result_t W25Q128_Check_ID(void)
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_TransmitReceive(&hspi2, tx_buffer, rx_buffer, 4, 100);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if (status == HAL_ERROR)
         return W25Q128_ERROR;
@@ -57,10 +57,10 @@ W25Q128_Result_t W25Q128_Read(const uint32_t mem_addr, uint8_t* rx_buffer, const
         ((mem_addr >> 8) & 0xFF), (mem_addr & 0xFF)
     };
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status_tx = HAL_SPI_Transmit(&hspi2, read_command, sizeof(read_command), sizeof(read_command));
     status_rx = HAL_SPI_Receive(&hspi2, rx_buffer, len, len);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if ((status_tx == HAL_TIMEOUT) || (status_rx == HAL_TIMEOUT))
         return W25Q128_TIMEOUT;
@@ -89,9 +89,9 @@ W25Q128_Result_t W25Q128_Write_Page(const uint32_t mem_addr, const uint8_t* tx_b
         mem_addr & 0xFF
     };
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, &command, 1, 1);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
@@ -99,10 +99,10 @@ W25Q128_Result_t W25Q128_Write_Page(const uint32_t mem_addr, const uint8_t* tx_b
         return W25Q128_ERROR;
 
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, write_command, 4, W25Q128_MIN_TIMEOUT);
     status_2 = HAL_SPI_Transmit(&hspi2, tx_buffer, len, len);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if ((status == HAL_TIMEOUT) || (status_2 == HAL_TIMEOUT))
         return W25Q128_TIMEOUT;
@@ -113,10 +113,10 @@ W25Q128_Result_t W25Q128_Write_Page(const uint32_t mem_addr, const uint8_t* tx_b
     start_time = HAL_GetTick();
     while (status_reg_val & W25Q128_STATUS_REG_BUSY_VALUE)
     {
-        CS_SELECT(W25Q128_PORT_PIN);
+        CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         status = HAL_SPI_Transmit(&hspi2, &command, 1, W25Q128_MIN_TIMEOUT);
         status_2 = HAL_SPI_Receive(&hspi2, &status_reg_val, 1, W25Q128_MIN_TIMEOUT);
-        CS_DESELECT(W25Q128_PORT_PIN);
+        CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         if ((status == HAL_TIMEOUT) || (status_2 == HAL_TIMEOUT))
             return W25Q128_TIMEOUT;
         if ((status == HAL_ERROR) || (status_2 == HAL_ERROR))
@@ -173,9 +173,9 @@ W25Q128_Result_t W25Q128_Erase_Chip(void)
     HAL_StatusTypeDef status_rx;
 
     uint8_t command = W25Q128_WRITE_ENABLE_COMMAND;
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, &command, 1, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
@@ -183,9 +183,9 @@ W25Q128_Result_t W25Q128_Erase_Chip(void)
         return W25Q128_ERROR;
 
     command = W25Q128_CHIP_ERASE_COMMAND;
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, &command, 1, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
@@ -196,10 +196,10 @@ W25Q128_Result_t W25Q128_Erase_Chip(void)
     start_time = HAL_GetTick();
     while (status_reg_val & W25Q128_STATUS_REG_BUSY_VALUE)
     {
-        CS_SELECT(W25Q128_PORT_PIN);
+        CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         status = HAL_SPI_Transmit(&hspi2, &command, 1, W25Q128_MIN_TIMEOUT);
         status_rx = HAL_SPI_Receive(&hspi2, &status_reg_val, 1, W25Q128_MIN_TIMEOUT);
-        CS_DESELECT(W25Q128_PORT_PIN);
+        CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
 
         if ((status == HAL_TIMEOUT) || (status_rx == HAL_TIMEOUT))
             return W25Q128_TIMEOUT;
@@ -224,9 +224,9 @@ W25Q128_Result_t W25Q128_Erase_Block_32kb(uint32_t block_addr)
     HAL_StatusTypeDef status;
     HAL_StatusTypeDef status_rx;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -237,9 +237,9 @@ W25Q128_Result_t W25Q128_Erase_Block_32kb(uint32_t block_addr)
     command[2] = (block_addr >> 8) & 0xFF;
     command[3] = block_addr & 0xFF;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 4, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -250,10 +250,10 @@ W25Q128_Result_t W25Q128_Erase_Block_32kb(uint32_t block_addr)
 
     while (status_reg_val & W25Q128_STATUS_REG_BUSY_VALUE)
     {
-        CS_SELECT(W25Q128_PORT_PIN);
+        CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
         status_rx = HAL_SPI_Receive(&hspi2, &status_reg_val, 1, W25Q128_MIN_TIMEOUT);
-        CS_DESELECT(W25Q128_PORT_PIN);
+        CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         if ((status == HAL_TIMEOUT) || (status_rx == HAL_TIMEOUT))
             return W25Q128_TIMEOUT;
         if ((status == HAL_ERROR || (status_rx == HAL_ERROR)))
@@ -275,9 +275,9 @@ W25Q128_Result_t W25Q128_Erase_Block_64kb(uint32_t block_addr)
     HAL_StatusTypeDef status;
     HAL_StatusTypeDef status_rx;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -288,9 +288,9 @@ W25Q128_Result_t W25Q128_Erase_Block_64kb(uint32_t block_addr)
     command[2] = (block_addr >> 8) & 0xFF;
     command[3] = block_addr & 0xFF;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 4, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -300,10 +300,10 @@ W25Q128_Result_t W25Q128_Erase_Block_64kb(uint32_t block_addr)
     start_time = HAL_GetTick();
     while (status_reg_val & W25Q128_STATUS_REG_BUSY_VALUE)
     {
-        CS_SELECT(W25Q128_PORT_PIN);
+        CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
         status_rx = HAL_SPI_Receive(&hspi2, &status_reg_val, 1, W25Q128_MIN_TIMEOUT);
-        CS_DESELECT(W25Q128_PORT_PIN);
+        CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         if ((status == HAL_TIMEOUT) || (status_rx == HAL_TIMEOUT))
             return W25Q128_TIMEOUT;
         if ((status == HAL_ERROR || (status_rx == HAL_ERROR)))
@@ -325,9 +325,9 @@ W25Q128_Result_t W25Q128_Erase_Sector(uint32_t sector_addr)
     HAL_StatusTypeDef status;
     HAL_StatusTypeDef status_rx;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -338,9 +338,9 @@ W25Q128_Result_t W25Q128_Erase_Sector(uint32_t sector_addr)
     command[2] = (sector_addr >> 8) & 0xFF;
     command[3] = sector_addr & 0xFF;
 
-    CS_SELECT(W25Q128_PORT_PIN);
+    CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     status = HAL_SPI_Transmit(&hspi2, command, 4, W25Q128_MIN_TIMEOUT);
-    CS_DESELECT(W25Q128_PORT_PIN);
+    CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
     if (status == HAL_TIMEOUT)
         return W25Q128_TIMEOUT;
     if (status == HAL_ERROR)
@@ -351,10 +351,10 @@ W25Q128_Result_t W25Q128_Erase_Sector(uint32_t sector_addr)
 
     while (status_reg_val & W25Q128_STATUS_REG_BUSY_VALUE)
     {
-        CS_SELECT(W25Q128_PORT_PIN);
+        CS_SELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         status = HAL_SPI_Transmit(&hspi2, command, 1, W25Q128_MIN_TIMEOUT);
         status_rx = HAL_SPI_Receive(&hspi2, &status_reg_val, 1, W25Q128_MIN_TIMEOUT);
-        CS_DESELECT(W25Q128_PORT_PIN);
+        CS_DESELECT(W25Q128_CS_PORT, W25Q128_CS_PIN);
         if ((status == HAL_TIMEOUT) || (status_rx == HAL_TIMEOUT))
             return W25Q128_TIMEOUT;
         if ((status == HAL_ERROR || (status_rx == HAL_ERROR)))

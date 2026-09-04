@@ -3,16 +3,17 @@
 
 #include <stdint.h>
 
-#define CS_SELECT(DEV)      HAL_GPIO_WritePin(DEV, GPIO_PIN_RESET)
-#define CS_DESELECT(DEV)    HAL_GPIO_WritePin(DEV, GPIO_PIN_SET)
-#define W25Q128_PORT_PIN GPIOB, GPIO_PIN_13
+#define CS_SELECT(PORT, PIN)    HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_RESET)
+#define CS_DESELECT(PORT, PIN)  HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_SET)
+#define W25Q128_CS_PORT         (GPIOB)
+#define W25Q128_CS_PIN          (GPIO_PIN_13)
 
-#define W25Q128_PAGE_SIZE   (256)
-#define W25Q128_SECTOR_SIZE (4096)
-#define W25Q128_BLOCK_SIZE  (65536)
-#define W25Q128_CHIP_SIZE   (16777216)
+#define W25Q128_PAGE_SIZE       (256)
+#define W25Q128_SECTOR_SIZE     (4096)
+#define W25Q128_BLOCK_SIZE      (65536)
+#define W25Q128_CHIP_SIZE       (16777216)
 
-#define W25Q128_MIN_TIMEOUT (10)
+#define W25Q128_MIN_TIMEOUT     (10)
 
 typedef enum
 {
