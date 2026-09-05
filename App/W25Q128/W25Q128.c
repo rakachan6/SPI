@@ -5,6 +5,16 @@
 
 extern SPI_HandleTypeDef hspi2;
 
+static inline W25Q128_Result_t W25Q128_Convert_Status(HAL_StatusTypeDef status)
+{
+    if (status == HAL_TIMEOUT)
+        return W25Q128_TIMEOUT;
+    if (status == HAL_ERROR)
+        return W25Q128_ERROR;
+
+    return  W25Q128_ERROR;
+}
+
 W25Q128_Result_t W25Q128_Check_ID(void)
 {
     uint32_t expected_id[3] = {0xEF, 0x40, 0x18};
