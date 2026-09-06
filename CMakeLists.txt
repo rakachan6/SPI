@@ -38,6 +38,11 @@ add_executable(${CMAKE_PROJECT_NAME}
         App/W25Q128/W25Q128_Commands.h
         App/Utils/utils.c
         App/Utils/utils.h
+        App/ST7789/ST7789.c
+        App/ST7789/ST7789.h
+        App/ST7789/ST7789_Commands.h
+        App/SPI/SPI_Driver.c
+        App/SPI/SPI_Driver.h
 )
 
 # Add STM32CubeMX generated sources

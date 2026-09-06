@@ -33,8 +33,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-#define W25Q128_CS_Pin (GPIO_PIN_13)
-#define W25Q128_CS_GPIO_Port (GPIOB)
+
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -231,14 +230,24 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(W25Q128_CS_GPIO_Port, W25Q128_CS_Pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOB, ST7789_CS_Pin|W25Q128_CS_Pin, GPIO_PIN_SET);
 
-  /*Configure GPIO pin : W25Q128_CS_Pin */
-  GPIO_InitStruct.Pin = W25Q128_CS_Pin;
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(ST7789_DC_GPIO_Port, ST7789_DC_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : ST7789_CS_Pin W25Q128_CS_Pin */
+  GPIO_InitStruct.Pin = ST7789_CS_Pin|W25Q128_CS_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(W25Q128_CS_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : ST7789_DC_Pin */
+  GPIO_InitStruct.Pin = ST7789_DC_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  HAL_GPIO_Init(ST7789_DC_GPIO_Port, &GPIO_InitStruct);
 
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
