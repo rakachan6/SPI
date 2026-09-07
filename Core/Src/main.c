@@ -22,7 +22,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-
+#include "ST7789.h"
+#include "SPI_Driver.h"
 #include "W25Q128.h"
 /* USER CODE END Includes */
 
@@ -56,6 +57,12 @@ static void MX_GPIO_Init(void);
 static void MX_DMA_Init(void);
 static void MX_SPI2_Init(void);
 /* USER CODE BEGIN PFP */
+
+SPI_Bus_t SPI_Bus = {
+  .hspi =               &hspi2,
+  .current_dev_config = W25Q128_Dev,
+  .bus_state =          SPI_Bus_Idle
+};
 
 /* USER CODE END PFP */
 

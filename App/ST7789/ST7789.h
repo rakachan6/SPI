@@ -1,19 +1,16 @@
 #ifndef HAL_SPI_ST7789_H
 #define HAL_SPI_ST7789_H
 #include <stdint.h>
-
-#define CS_SELECT(PORT, PIN)            HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_RESET)
-#define CS_DESELECT(PORT, PIN)          HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_SET)
-#define ST7789_DC_COMMAND(PORT, PIN)    HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_RESET)
-#define ST7789_DC_DATA(PORT, PIN)       HAL_GPIO_WritePin((PORT), (PIN), GPIO_PIN_SET)
+#include "SPI_Driver.h"
 
 #define ST7789_CS_PORT                  (GPIOB)
 #define ST7789_CS_PIN                   (GPIO_PIN_12)
 #define ST7789_DC_PORT                  (GPIOB)
 #define ST7789_DC_PIN                   (GPIO_PIN_11)
 #define ST7789_MIN_TIMEOUT              (10)
-#define ST7789_MAX_COL                  (239)
-#define ST7789_MAX_ROW                  (319)
+#define ST7789_MAX_COL                  (319)
+#define ST7789_MAX_ROW                  (239)
+#define ST7789_BUSY_WAIT_LIMIT          (10000)
 
 typedef enum
 {
@@ -22,15 +19,16 @@ typedef enum
     ST7789_TIMEOUT,
 } ST7789_Result_t;
 
-ST7789_Result_t ST7789_Init(void);
-ST7789_Result_t ST7789_Reset(void);
-ST7789_Result_t ST7789_Display_On(void);
-ST7789_Result_t ST7789_Sleep_In(void);
-ST7789_Result_t ST7789_Sleep_Out(void);
-ST7789_Result_t ST7789_Set_Pixel_Format_565(void);
-ST7789_Result_t ST7789_Set_Columns(uint16_t start_col, uint16_t end_col);
-ST7789_Result_t ST7789_Set_Rows(uint16_t start_row, uint16_t end_row);
-ST7789_Result_t ST7789_Fill_Color(uint16_t start_col, uint16_t end_col,
+ST7789_Result_t ST7789_Init(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Reset(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Display_On(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Sleep_In(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Sleep_Out(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Set_Pixel_Format_565(SPI_Bus_t *bus);
+ST7789_Result_t ST7789_Set_Columns(SPI_Bus_t *bus, uint16_t start_col, uint16_t end_col);
+ST7789_Result_t ST7789_Set_Rows(SPI_Bus_t *bus, uint16_t start_row, uint16_t end_row);
+ST7789_Result_t ST7789_Fill_Color(SPI_Bus_t *bus,
+                                    uint16_t start_col, uint16_t end_col,
                                     uint16_t start_row, uint16_t end_row,
                                     uint16_t color);
 

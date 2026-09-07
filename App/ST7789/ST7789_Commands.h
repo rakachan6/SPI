@@ -14,5 +14,5 @@
 #define ST7789_MEM_WRITE_COMMAND                (0x2C)
 #define ST7788_MADCTL_COMMAND                   (0x36)
 #define ST7789_COLMOD_COMMAND                   (0x3A)
-#define ST7789_SET_PIXEL_FORMAT_565     (0x55)
+#define ST7789_SET_PIXEL_FORMAT_565             (0x55)
 #endif //HAL_SPI_ST7789_COMMANDS_H
