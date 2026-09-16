@@ -5,8 +5,8 @@
 
 #define ST7789_CS_PORT                  (GPIOB)
 #define ST7789_CS_PIN                   (GPIO_PIN_12)
-#define ST7789_DC_PORT                  (GPIOB)
-#define ST7789_DC_PIN                   (GPIO_PIN_11)
+#define ST7789_DC_PORT                  (GPIOA)
+#define ST7789_DC_PIN                   (GPIO_PIN_8)
 #define ST7789_MIN_TIMEOUT              (10)
 #define ST7789_MAX_COL                  (319)
 #define ST7789_MAX_ROW                  (239)
