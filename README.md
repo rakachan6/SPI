@@ -29,12 +29,13 @@ Requirements:
 ```sh
 # Configure (only needed once per preset, or after CMakePresets.json changes)
 cmake --preset Release
+cmake --build build/Release
 ```
 The resulting binary is at build/Release/HAL_SPI.elf.
 
 ## Flashing
 Using an ST-Link probe and STM32CubeProgrammer:
 ```shell
-STM32_Programmer_CLI -c port=SWD -w build/Debug/HAL_SPI.elf -v -rst
+STM32_Programmer_CLI -c port=SWD -w build/Release/HAL_SPI.elf -v -rst
 ```
 
